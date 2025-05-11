@@ -14,7 +14,7 @@ const personalInputSchema = z.object({
   photo: z.string(),
 })
 
-const { errors, handleSubmit, setErrors, setValues } = useForm({
+const { errors, handleSubmit, setErrors } = useForm({
   validationSchema: toTypedSchema(personalInputSchema),
 })
 
@@ -39,7 +39,7 @@ const handleUpload = async (event: InputEvent) => {
     const photoValidation = photoValidationSchema.safeParse({ photo: file })
 
     if (photoValidation.success) {
-      onboardingStore.storeProfilePic(file)
+      await onboardingStore.storeProfilePic(file)
       setErrors({
         photo: '',
       })

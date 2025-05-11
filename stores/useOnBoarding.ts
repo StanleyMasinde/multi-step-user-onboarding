@@ -40,14 +40,7 @@ export const useOnBoardingStore = defineStore('onboarding', {
   },
   actions: {
     async storeProfilePic(file: File) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        if (reader.result) {
-          this.personalDetails.profile_image_url = reader.result as string
-        }
-      }
-
-      reader.readAsDataURL(file)
+      this.personalDetails.profile_image_url = await useFileAsBase64(file)
     },
     setPersonalDetails(name: string, email: string, phone_number: string) {
       this.personalDetails.name = name
