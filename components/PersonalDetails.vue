@@ -16,9 +16,15 @@ const { handleSubmit, errors } = useForm({
   validationSchema,
 })
 
-const { value: name } = useField<string>('name', () => onboardingStore.personalDetails.name)
-const { value: email } = useField<string>('email', () => onboardingStore.personalDetails.email)
-const { value: phone_number } = useField<string>('phone_number', () => onboardingStore.personalDetails.phone_number)
+const { value: name } = useField<string>('name', () => onboardingStore.personalDetails.name || '')
+const { value: email } = useField<string>('email', () => onboardingStore.personalDetails.email || '')
+const { value: phone_number } = useField<string>('phone_number', () => onboardingStore.personalDetails.phone_number || '')
+
+const handleUpload = (event: InputEvent) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  onboardingStore.uploadFile(file)
+}
 
 const submitForm = handleSubmit(() => {
   console.log('Form submitted with:')
@@ -93,6 +99,30 @@ const submitForm = handleSubmit(() => {
         v-if="errors.phone_number"
         class="text-red-500 italic"
       >{{ errors.phone_number }}</small>
+
+      <div>
+        <label
+          for="photo"
+          class="text-lg"
+        >
+          Photo
+        </label>
+        <input
+          id="photo"
+          class="w-full border p-2"
+          accept="image/jpg,image/png"
+          type="file"
+          @change="(event) => {
+            const iEvent = event as InputEvent
+            return handleUpload(iEvent)
+          }"
+        >
+      </div>
+      <small
+        v-if="onboardingStore.profilePicError"
+        class="text-red-500 italic"
+      >{{ onboardingStore.profilePicError
+      }}</small>
 
       <div class="mt-2">
         <button

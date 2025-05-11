@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
 
   modules: ['@pinia/nuxt', '@nuxt/eslint'],
+
+  plugins: ['~/plugins/networkMock.client.ts'],
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2024-11-01',
