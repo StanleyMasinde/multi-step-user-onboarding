@@ -21,7 +21,7 @@ interface BusinessDetails {
   name: string
   logo_url: string
   industry: string
-  size: number
+  size: string
   business_document: string
 }
 
@@ -42,10 +42,21 @@ export const useOnBoardingStore = defineStore('onboarding', {
     async storeProfilePic(file: File) {
       this.personalDetails.profile_image_url = await useFileAsBase64(file)
     },
+    async storeBusinessLogo(file: File) {
+      this.businessDetails.logo_url = await useFileAsBase64(file)
+    },
+    async storeBusinessDocument(file: File) {
+      this.businessDetails.business_document = await useFileAsBase64(file)
+    },
     setPersonalDetails(name: string, email: string, phone_number: string) {
       this.personalDetails.name = name
       this.personalDetails.email = email
       this.personalDetails.phone_number = phone_number
+    },
+    setBusinessDetails(name: string, industry: string, size: string) {
+      this.businessDetails.name = name
+      this.businessDetails.industry = industry
+      this.businessDetails.size = size
     },
   },
 })

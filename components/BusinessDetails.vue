@@ -17,44 +17,90 @@ const industries = [
   'E-commerce',
 ]
 
+const companySizes = [
+  { label: 'Self-Employed', value: '1' },
+  { label: 'Micro Business (1-9 employees)', value: '1-9' },
+  { label: 'Small Business (10-49 employees)', value: '10-49' },
+  { label: 'Medium Business (50-249 employees)', value: '50-249' },
+  { label: 'Large Business (250-999 employees)', value: '250-999' },
+  { label: 'Enterprise (1000+ employees)', value: '1000+' },
+]
+
 const businessInfo = z.object({
   name: z.string().nonempty('Please enter the name of your business'),
-  logo: z.instanceof(File).refine(file => file.size <= 2 * 1024 * 1024, { message: 'Logo must be smaller than or equal to 2MB' }),
+  logo: z.string(),
   industry: z.string()
     .nonempty('Please select the industry'),
-  size: z.number().gt(0, 'Company size has to be bigger than zero'),
-  document: z.instanceof(File).refine(file => file.size <= 5 * 1024 * 1024, { message: 'The document must be smaller than or equal to 5MB' }),
+  size: z.string(),
+  document: z.string(),
 })
 
-const { errors, handleSubmit } = useForm({
+const { errors, handleSubmit, setErrors } = useForm({
   validationSchema: toTypedSchema(businessInfo),
 })
 
-const { value: name } = useField('name')
+const { value: name } = useField<string>('name')
 const { setValue: setLogo } = useField('logo')
-const { value: industry } = useField('industry')
+const { value: industry } = useField<string>('industry')
 const { setValue: setDocument } = useField('document')
+const { value: size } = useField<string>('size')
 
-const handleUpload = async (event: InputEvent) => {
+const onLogoInput = async (event: InputEvent) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
 
-  if (file?.type == 'application/pdf') {
-    setDocument(file)
-    await onboardingStore.uploadFile(file, 'document')
+  if (file) {
+    const logoValidationSchema = z.object({
+      logo: z.instanceof(File).refine(file => file.size <= 2 * 1024 * 1024, {
+        message: 'Logo must be smaller than 2MB',
+      }).refine(file => ['image/png', 'image/jpeg'].includes(file.type), {
+        message: 'Unsupported file type. Only JPG and PNG allowed',
+      }),
+    })
+
+    const validateLogo = logoValidationSchema.safeParse({ logo: file })
+
+    if (validateLogo.success) {
+      await onboardingStore.storeBusinessLogo(file)
+      setLogo(onboardingStore.businessDetails.logo_url)
+    }
+    else {
+      setErrors({
+        logo: validateLogo.error.errors[0].message,
+      })
+    }
   }
-  else {
-    setLogo(file)
-    await onboardingStore.uploadFile(file, 'logo')
+}
+const onDocumentInput = async (event: InputEvent) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+
+  if (file) {
+    const documentValidationSchema = z.object({
+      document: z.instanceof(File).refine(file => file.size <= 5 * 1024 * 1024, {
+        message: 'Document must be less than 5MB',
+      }).refine(file => file.type == 'application/pdf', {
+        message: 'Unsupported file type. Only PDFs allowed',
+      }),
+    })
+
+    const validateDocument = documentValidationSchema.safeParse({ document: file })
+
+    if (validateDocument.success) {
+      await onboardingStore.storeBusinessDocument(file)
+      setDocument(onboardingStore.businessDetails.business_document)
+    }
+    else {
+      setErrors({
+        document: validateDocument.error.errors[0].message,
+      })
+    }
   }
 }
 
 const submitForm = handleSubmit(() => {
-  if (!onboardingStore.personalDetails.profile_image_url) {
-    onboardingStore.profilePicError = 'Pleas add a profile picture'
-    return
-  }
-  onboardingStore.currentStep = 2
+  onboardingStore.setBusinessDetails(name.value, industry.value, size.value)
+  onboardingStore.currentStep = 3
 })
 </script>
 
@@ -69,15 +115,15 @@ const submitForm = handleSubmit(() => {
           for="name"
           class="text-lg"
         >
-          Name
+          Business Name
         </label>
         <input
           id="name"
           v-model="name"
           class="w-full"
           type="text"
-          autocomplete="name"
-          placeholder="John Doe"
+          autocomplete="organization-title"
+          placeholder="Acme Inc"
         >
         <small
           v-if="errors.name"
@@ -87,27 +133,27 @@ const submitForm = handleSubmit(() => {
 
       <div>
         <label
-          for="photo"
+          for="logo"
           class="text-lg"
         >
           Logo
         </label>
         <input
-          id="photo"
+          id="logo"
           class="w-full border p-2"
           accept="image/jpg,image/png"
           type="file"
           @change="(event) => {
             const iEvent = event as InputEvent
-            return handleUpload(iEvent)
+            return onLogoInput(iEvent)
           }"
         >
       </div>
       <small
-        v-if="onboardingStore.logoError"
+        v-if="errors.logo"
         class="text-red-500 italic"
       >
-        {{ onboardingStore.logoError }}
+        {{ errors.logo }}
       </small>
 
       <div>
@@ -115,15 +161,13 @@ const submitForm = handleSubmit(() => {
           for="industry"
           class="text-lg"
         >
-          Name
+          Industry
         </label>
         <select
           id="industry"
           v-model="industry"
           class="w-full"
           type="text"
-          autocomplete="name"
-          placeholder="John Doe"
         >
           <option
             v-for="(ind, index) in industries"
@@ -136,13 +180,74 @@ const submitForm = handleSubmit(() => {
         <small
           v-if="errors.industry"
           class="text-red-500 italic"
-        >{{ errors.name }}</small>
+        >{{ errors.industry }}</small>
       </div>
 
-      <div class="mt-2">
+      <div>
+        <label
+          for="industry"
+          class="text-lg"
+        >
+          Company size
+        </label>
+        <select
+          id="industry"
+          v-model="size"
+          class="w-full"
+          type="text"
+        >
+          <option
+            v-for="(company_size, index) in companySizes"
+            :key="index"
+            :value="company_size.value"
+          >
+            {{ company_size.label }}
+          </option>
+        </select>
+        <small
+          v-if="errors.size"
+          class="text-red-500 italic"
+        >{{ errors.size }}</small>
+      </div>
+
+      <div>
+        <label
+          for="document"
+          class="text-lg"
+        >
+          Business document
+        </label>
+        <input
+          id="logo"
+          class="w-full border p-2"
+          accept="application/pdf"
+          type="file"
+          @change="(event) => {
+            const iEvent = event as InputEvent
+            return onDocumentInput(iEvent)
+          }"
+        >
+      </div>
+      <small
+        v-if="errors.document"
+        class="text-red-500 italic"
+      >
+        {{ errors.document }}
+      </small>
+
+      <div class="mt-2 flex gap-2 justify-center">
         <button
-          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed"
-          :disabled="Object.keys(errors).length > 0 || onboardingStore.profilePicError != ''"
+          type="button"
+          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+          :disabled="Object.keys(errors).length > 0"
+          @click.prevent="onboardingStore.currentStep = 1"
+        >
+          Edit personal details
+        </button>
+
+        <button
+          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+          :disabled="Object.keys(errors).length > 0"
         >
           Verify details
         </button>
