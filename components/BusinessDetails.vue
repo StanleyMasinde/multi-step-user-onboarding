@@ -239,7 +239,6 @@ const submitForm = handleSubmit(() => {
         <button
           type="button"
           class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
-          :disabled="Object.keys(errors).length > 0"
           @click.prevent="onboardingStore.currentStep = 1"
         >
           Edit personal details
