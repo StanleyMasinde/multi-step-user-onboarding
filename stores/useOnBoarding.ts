@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 
 interface State {
-  personalDetails: Partial<PersonalDetails>
-  businessDetails: Partial<BusinessDetails>
+  personalDetails: PersonalDetails
+  businessDetails: BusinessDetails
+  currentStep: number
 }
 
 interface PersonalDetails {
@@ -23,8 +24,20 @@ interface BusinessDetails {
 export const useOnBoardingStore = defineStore('onboarding', {
   state: (): State => {
     return {
-      personalDetails: {},
-      businessDetails: {},
+      personalDetails: {
+        name: '',
+        email: '',
+        phone_number: '',
+        profile_image_url: '',
+      },
+      businessDetails: {
+        name: '',
+        logo_url: '',
+        industry: '',
+        size: 0,
+        business_document: '',
+      },
+      currentStep: 1,
     }
   },
 })
