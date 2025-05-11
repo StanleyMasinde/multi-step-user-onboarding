@@ -1,30 +1,30 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
 interface State {
-	personalDetails: Partial<PersonalDetails>
-	businessDetails: Partial<BusinessDetails>
+  personalDetails: Partial<PersonalDetails>
+  businessDetails: Partial<BusinessDetails>
 }
 
 interface PersonalDetails {
-	name: String
-	email: String
-	phone_number: String
-	profile_image_url: String
+  name: string
+  email: string
+  phone_number: string
+  profile_image_url: string
 }
 
 interface BusinessDetails {
-	name: String
-	logo_url: String
-	industry: String
-	size: number
-	business_document: String
+  name: string
+  logo_url: string
+  industry: string
+  size: number
+  business_document: string
 }
 
 export const useOnBoardingStore = defineStore('onboarding', {
-	state: (): State => {
-		return {
-			personalDetails: {},
-			businessDetails: {}
-		}
-	}
+  state: (): State => {
+    return {
+      personalDetails: {},
+      businessDetails: {},
+    }
+  },
 })
