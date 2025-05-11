@@ -11,6 +11,6 @@ const onboardingStore = useOnBoardingStore()
     <BusinessDetails v-show="onboardingStore.currentStep == 2" />
 
     <!-- Verification -->
-    <Verification v-show="onboardingStore.currentStep == 3" />
+    <VerificationStep v-show="onboardingStore.currentStep == 3" />
   </div>
 </template>
