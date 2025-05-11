@@ -5,43 +5,56 @@ import { z } from 'zod'
 
 const onboardingStore = useOnBoardingStore()
 
-const stepOneInput = z.object({
-  name: z.string().nonempty('Name is required'),
-  email: z.string().email('Please enter a valid E-mail').nonempty('E-mail is required'),
+const personalInputSchema = z.object({
+  name: z.string({ message: 'Name is required' }).nonempty('Name is required'),
+  email: z.string({ message: 'E-mail is required' }).email('Please enter a valid E-mail').nonempty('E-mail is required'),
   phone_number: z.string()
     .nonempty('Phone number is required')
     .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format (E.164)'),
-  photo: z.instanceof(File).refine(file => file.size <= 2 * 1024 * 1024, {
-    message: 'Picture must be smaller thatn 2Mb',
-  }).refine(file => ['image/png', 'image/jpeg'].includes(file.type), {
-    message: 'Unsupported file type. Only JPG and PNG allowed',
-  }).optional(),
+  photo: z.string(),
 })
 
-const { errors, handleSubmit } = useForm({
-  validationSchema: toTypedSchema(stepOneInput),
+const { errors, handleSubmit, setErrors, setValues } = useForm({
+  validationSchema: toTypedSchema(personalInputSchema),
 })
 
-const { value: name } = useField('name')
-const { value: email } = useField('email')
-const { value: phone_number } = useField('phone_number')
-const { setValue: setPhoto } = useField('photo')
+const { value: name } = useField<string>('name')
+const { value: email } = useField<string>('email')
+const { value: phone_number } = useField<string>('phone_number')
+const { errorMessage: photoError, value: photoValue } = useField('photo')
 
 const handleUpload = async (event: InputEvent) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
 
   if (file) {
-    setPhoto(file) // Set file for validation
-    await onboardingStore.uploadFile(file) // Upload to store
+    const photoValidationSchema = z.object({
+      photo: z.instanceof(File).refine(file => file.size <= 2 * 1024 * 1024, {
+        message: 'Picture must be smaller than 2MB',
+      }).refine(file => ['image/png', 'image/jpeg'].includes(file.type), {
+        message: 'Unsupported file type. Only JPG and PNG allowed',
+      }),
+    })
+
+    const photoValidation = photoValidationSchema.safeParse({ photo: file })
+
+    if (photoValidation.success) {
+      onboardingStore.storeProfilePic(file)
+      setErrors({
+        photo: '',
+      })
+      photoValue.value = onboardingStore.personalDetails.profile_image_url
+    }
+    else {
+      setErrors({
+        photo: photoValidation.error.errors[0].message,
+      })
+    }
   }
 }
 
 const submitForm = handleSubmit(() => {
-  if (!onboardingStore.personalDetails.profile_image_url) {
-    onboardingStore.profilePicError = 'Pleas add a profile picture'
-    return
-  }
+  onboardingStore.setPersonalDetails(name.value, email.value, phone_number.value)
   onboardingStore.currentStep = 2
 })
 </script>
@@ -134,10 +147,10 @@ const submitForm = handleSubmit(() => {
         >
       </div>
       <small
-        v-if="onboardingStore.profilePicError"
+        v-if="photoError"
         class="text-red-500 italic"
-      >{{ onboardingStore.profilePicError
-      }}</small>
+      >
+        {{ photoError }}</small>
 
       <div class="mt-2">
         <button

@@ -6,6 +6,8 @@ interface State {
   currentStep: number
   profilePicError: string
   documentError: string
+  logoError: string
+
 }
 
 interface PersonalDetails {
@@ -33,68 +35,24 @@ export const useOnBoardingStore = defineStore('onboarding', {
       currentStep: 1,
       profilePicError: '',
       documentError: '',
+      logoError: '',
     }
   },
   actions: {
-    async uploadFile(file: File | undefined, type: 'picture' | 'PDF' = 'picture') {
-      let maxSize = type == 'PDF' ? 5 : 2
-      if (type == 'PDF') {
-        maxSize = 5
-      }
-
-      if (!file) {
-        this.personalDetails.profile_image_url = undefined
-        if (type == 'PDF') {
-          this.documentError = 'Please upload a PDF document'
-        }
-        else {
-          this.profilePicError = 'Please add profile pic'
-        }
-        return
-      }
-
-      if (file.size > maxSize * 1024 * 1024) {
-        this.personalDetails.profile_image_url = undefined
-        if (type == 'PDF') {
-          this.documentError = `The PDF must be less than ${maxSize}MB`
-        }
-        else {
-          this.profilePicError = `The picture must be less that ${maxSize}MB`
-        }
-
-        return
-      }
-
-      try {
-        const response = await fetch('https://example.com/upload', {
-          method: 'POST',
-          body: file,
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          this.personalDetails.profile_image_url = data.url
-          this.profilePicError = ''
-          this.documentError = ''
-        }
-        else {
-          if (type == 'PDF') {
-            this.documentError = 'Failed to upload the PDF.'
-          }
-          else {
-            this.profilePicError = 'Fail to upload the profiel picture'
-          }
+    async storeProfilePic(file: File) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (reader.result) {
+          this.personalDetails.profile_image_url = reader.result as string
         }
       }
-      catch (error) {
-        if (type == 'PDF') {
-          this.documentError = 'An error occoured during PDF upload'
-        }
-        else {
-          this.profilePicError = 'An error occoured during picture upload'
-        }
-        console.error(error)
-      }
+
+      reader.readAsDataURL(file)
+    },
+    setPersonalDetails(name: string, email: string, phone_number: string) {
+      this.personalDetails.name = name
+      this.personalDetails.email = email
+      this.personalDetails.phone_number = phone_number
     },
   },
 })
