@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   plugins: ['~/plugins/networkMock.client.ts'],
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+  experimental: {
+    appManifest: false,
+  },
   compatibilityDate: '2024-11-01',
 
   vite: {
