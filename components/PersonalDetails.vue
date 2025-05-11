@@ -27,7 +27,11 @@ const handleUpload = (event: InputEvent) => {
 }
 
 const submitForm = handleSubmit(() => {
-  console.log('Form submitted with:')
+  if (!onboardingStore.personalDetails.profile_image_url) {
+    onboardingStore.profilePicError = 'Pleas add a profile picture'
+    return
+  }
+  onboardingStore.currentStep = 2
 })
 </script>
 
@@ -91,7 +95,7 @@ const submitForm = handleSubmit(() => {
           v-model="phone_number"
           class="w-full"
           type="tel"
-          autocomplete="tel-national"
+          autocomplete="tel-area-code"
           placeholder="+254712345678"
         >
       </div>
@@ -127,7 +131,7 @@ const submitForm = handleSubmit(() => {
       <div class="mt-2">
         <button
           class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed"
-          :disabled="Object.keys(errors).length > 0"
+          :disabled="Object.keys(errors).length > 0 || onboardingStore.profilePicError != ''"
         >
           Proceed to business details
         </button>
