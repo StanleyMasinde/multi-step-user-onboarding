@@ -1,29 +1,40 @@
 <script setup lang="ts">
 import { useForm, useField } from 'vee-validate'
-import * as yup from 'yup'
+import { toTypedSchema } from '@vee-validate/zod'
+import { z } from 'zod'
 
 const onboardingStore = useOnBoardingStore()
 
-const validationSchema = yup.object({
-  name: yup.string().required('Please enter your name'),
-  email: yup.string().email('Please enter a valid E-mail').required(),
-  phone_number: yup.string()
-    .required('Phone number is required')
-    .matches(/^\+2547\d{8}$/, 'Phone number must be in +2547XXXXXXXX format'),
+const stepOneInput = z.object({
+  name: z.string().nonempty('Name is required'),
+  email: z.string().email('Please enter a valid E-mail').nonempty('E-mail is required'),
+  phone_number: z.string()
+    .nonempty('Phone number is required')
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format (E.164)'),
+  photo: z.instanceof(File).refine(file => file.size <= 2 * 1024 * 1024, {
+    message: 'Picture must be smaller thatn 2Mb',
+  }).refine(file => ['image/png', 'image/jpeg'].includes(file.type), {
+    message: 'Unsupported file type. Only JPG and PNG allowed',
+  }).optional(),
 })
 
-const { handleSubmit, errors } = useForm({
-  validationSchema,
+const { errors, handleSubmit } = useForm({
+  validationSchema: toTypedSchema(stepOneInput),
 })
 
-const { value: name } = useField<string>('name', () => onboardingStore.personalDetails.name || '')
-const { value: email } = useField<string>('email', () => onboardingStore.personalDetails.email || '')
-const { value: phone_number } = useField<string>('phone_number', () => onboardingStore.personalDetails.phone_number || '')
+const { value: name } = useField('name')
+const { value: email } = useField('email')
+const { value: phone_number } = useField('phone_number')
+const { setValue: setPhoto } = useField('photo')
 
-const handleUpload = (event: InputEvent) => {
+const handleUpload = async (event: InputEvent) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  onboardingStore.uploadFile(file)
+
+  if (file) {
+    setPhoto(file) // Set file for validation
+    await onboardingStore.uploadFile(file) // Upload to store
+  }
 }
 
 const submitForm = handleSubmit(() => {
