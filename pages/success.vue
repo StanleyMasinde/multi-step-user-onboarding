@@ -1,4 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const store = useOnBoardingStore()
+const router = useRouter()
+
+const startOver = () => {
+  store.$reset()
+  router.push('/')
+}
+</script>
 
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gray-100">
@@ -26,8 +34,9 @@
       <a
         href="#"
         class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg"
-      > Go to
-        Dashboard
+        @click.prevent="startOver"
+      > Start
+        over
       </a>
     </div>
   </div>

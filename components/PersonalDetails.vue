@@ -70,22 +70,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-5">
+  <div class="p-6 bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+    <!-- Title -->
+    <h2 class="text-2xl font-semibold text-center mb-6">
+      Personal details
+    </h2>
+
     <form
       action="#"
       @submit.prevent="submitForm"
     >
-      <div>
+      <!-- Name Field -->
+      <div class="mb-4">
         <label
           for="name"
-          class="text-lg"
-        >
-          Name
-        </label>
+          class="text-lg font-semibold"
+        >Name</label>
         <input
           id="name"
           v-model="name"
-          class="w-full"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           autocomplete="name"
           placeholder="John Doe"
@@ -96,17 +100,16 @@ onMounted(() => {
         >{{ errors.name }}</small>
       </div>
 
-      <div>
+      <!-- Email Field -->
+      <div class="mb-4">
         <label
           for="email"
-          class="text-lg"
-        >
-          E-mail
-        </label>
+          class="text-lg font-semibold"
+        >E-mail</label>
         <input
           id="email"
           v-model="email"
-          class="w-full"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="email"
           autocomplete="email"
           placeholder="john@example.com"
@@ -117,54 +120,52 @@ onMounted(() => {
         >{{ errors.email }}</small>
       </div>
 
-      <div>
+      <!-- Phone Number Field -->
+      <div class="mb-4">
         <label
           for="phone"
-          class="text-lg"
-        >
-          Phone number
-        </label>
+          class="text-lg font-semibold"
+        >Phone number</label>
         <input
           id="phone"
           v-model="phone_number"
-          class="w-full"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="tel"
           autocomplete="tel-area-code"
           placeholder="+254712345678"
         >
+        <small
+          v-if="errors.phone_number"
+          class="text-red-500 italic"
+        >{{ errors.phone_number }}</small>
       </div>
-      <small
-        v-if="errors.phone_number"
-        class="text-red-500 italic"
-      >{{ errors.phone_number }}</small>
 
-      <div>
+      <!-- Photo Upload Field -->
+      <div class="mb-4">
         <label
           for="photo"
-          class="text-lg"
-        >
-          Photo
-        </label>
+          class="text-lg font-semibold"
+        >Photo</label>
         <input
           id="photo"
-          class="w-full border p-2"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
           accept="image/jpg,image/png"
           type="file"
           @change="(event) => {
-            const iEvent = event as InputEvent
-            return handleUpload(iEvent)
+            const iEvent = event as InputEvent;
+            return handleUpload(iEvent);
           }"
         >
+        <small
+          v-if="photoError"
+          class="text-red-500 italic"
+        >{{ photoError }}</small>
       </div>
-      <small
-        v-if="photoError"
-        class="text-red-500 italic"
-      >
-        {{ photoError }}</small>
 
-      <div class="mt-2">
+      <!-- Submit Button -->
+      <div class="mt-6">
         <button
-          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed"
+          class="w-full bg-blue-500 text-white p-3 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none disabled:bg-blue-500/60 disabled:cursor-not-allowed"
           :disabled="Object.keys(errors).length > 0"
         >
           Proceed to business details

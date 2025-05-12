@@ -39,80 +39,127 @@ const signUp = async () => {
     onboardingStore.isLoading = false
   }
 }
-
-onMounted(() => {
-  // Due to persistence, this component might render first.
-  // The code below is to esure the images are loaded correcty
-})
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col align-middle m-5 gap-3">
-    <div class="w-full border p-5">
-      <h1 class="text-3xl">
-        Personal details
+  <div class="min-h-screen flex flex-col m-5 gap-6">
+    <!-- Title -->
+    <div class="w-full text-center">
+      <h1 class="text-4xl font-semibold mb-6">
+        Verification & Summary
       </h1>
+    </div>
 
-      <div>
-        <p>Name: {{ onboardingStore.personalDetails.name }}</p>
-        <p>Phone: {{ onboardingStore.personalDetails.phone_number }}</p>
-        <p>Email: {{ onboardingStore.personalDetails.email }}</p>
-        <div class="mt-3">
-          <figure>
+    <!-- Personal Details Section -->
+    <div class="w-full border p-6 rounded-lg shadow-lg bg-white">
+      <h2 class="text-3xl font-semibold mb-4">
+        Personal Details
+      </h2>
+
+      <div class="space-y-3">
+        <p class="text-lg">
+          <span class="font-semibold">Name:</span> {{ onboardingStore.personalDetails.name }}
+        </p>
+        <p class="text-lg">
+          <span class="font-semibold">Phone:</span> {{ onboardingStore.personalDetails.phone_number }}
+        </p>
+        <p class="text-lg">
+          <span class="font-semibold">Email:</span> {{ onboardingStore.personalDetails.email }}
+        </p>
+
+        <div class="mt-3 text-center">
+          <figure class="inline-block">
             <img
               :src="onboardingStore.personalDetails.profile_image_url"
               alt="Profile picture"
-              class="aspect-square h-24"
+              class="aspect-square h-24 rounded-full border-2 border-gray-300"
             >
-            <figcaption>Profile picture</figcaption>
+            <figcaption class="text-sm text-gray-500">
+              Profile Picture
+            </figcaption>
           </figure>
         </div>
       </div>
+
+      <div class="mt-4 text-center text-gray-500 text-sm">
+        <p>Please review your personal information before proceeding.</p>
+      </div>
     </div>
 
-    <div class="border p-5">
-      <h1 class="text-3xl">
-        Business details
-      </h1>
+    <!-- Business Details Section -->
+    <div class="w-full border p-6 rounded-lg shadow-lg bg-white">
+      <h2 class="text-3xl font-semibold mb-4">
+        Business Details
+      </h2>
 
-      <div>
-        <p>Name: {{ onboardingStore.businessDetails.name }}</p>
-        <p>Industry: {{ onboardingStore.businessDetails.industry }}</p>
-        <p>Company Size: {{ onboardingStore.businessDetails.size }}</p>
-        <div>
-          <figure>
+      <div class="space-y-3">
+        <p class="text-lg">
+          <span class="font-semibold">Business Name:</span> {{ onboardingStore.businessDetails.name }}
+        </p>
+        <p class="text-lg">
+          <span class="font-semibold">Industry:</span> {{ onboardingStore.businessDetails.industry }}
+        </p>
+        <p class="text-lg">
+          <span class="font-semibold">Company Size:</span> {{ onboardingStore.businessDetails.size }}
+        </p>
+
+        <div class="mt-3 text-center">
+          <figure class="inline-block">
             <img
-              class="aspect-square h-24"
+              class="aspect-square h-24 rounded-full border-2 border-gray-300"
               :src="onboardingStore.businessDetails.logo_url"
-              alt="Logo"
+              alt="Business logo"
             >
-            <figcaption>Business logo</figcaption>
+            <figcaption class="text-sm text-gray-500">
+              Business Logo
+            </figcaption>
           </figure>
         </div>
 
-        <div class="border flex flex-col">
+        <div class="mt-4 border rounded-lg overflow-hidden">
           <iframe
             :src="onboardingStore.businessDetails.business_document"
-            type="Business doc"
+            class="w-full h-72"
+            frameborder="0"
+            title="Business Document"
           />
         </div>
       </div>
+
+      <div class="mt-4 text-center text-gray-500 text-sm">
+        <p>
+          Please ensure the details above are accurate. If any changes are needed, you can edit them before
+          finalizing.
+        </p>
+      </div>
     </div>
 
-    <div class="mt-2 flex gap-2 justify-center">
+    <!-- Action Buttons -->
+    <div class="mt-6 flex gap-4 justify-center">
       <button
         type="button"
-        class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+        class="bg-blue-500 text-white p-3 rounded-lg shadow-md disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
         @click.prevent="onboardingStore.currentStep = 2"
       >
-        Edit business details
+        Back to Business Details
       </button>
 
       <button
-        class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+        class="bg-blue-500 text-white p-3 rounded-lg shadow-md disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
         @click.prevent="signUp"
       >
-        Submit details
+        Submit Details
+      </button>
+    </div>
+
+    <!-- Start Over Button -->
+    <div class="mt-6 flex justify-center">
+      <button
+        type="button"
+        class="bg-red-500 text-white p-3 rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-40"
+        @click.prevent="onboardingStore.$reset()"
+      >
+        Start Over
       </button>
     </div>
   </div>

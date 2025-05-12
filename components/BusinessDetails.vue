@@ -105,22 +105,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-5">
+  <div class="p-6 bg-white rounded-lg shadow-lg max-w-4xl mx-auto">
+    <!-- Title -->
+    <h2 class="text-2xl font-semibold text-center mb-6">
+      Business details
+    </h2>
+
     <form
       action="#"
       @submit.prevent="submitForm"
     >
-      <div>
+      <!-- Business Name Field -->
+      <div class="mb-4">
         <label
           for="name"
-          class="text-lg"
-        >
-          Business Name
-        </label>
+          class="text-lg font-semibold"
+        >Business Name</label>
         <input
           id="name"
           v-model="name"
-          class="w-full"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           autocomplete="organization-title"
           placeholder="Acme Inc"
@@ -131,43 +135,38 @@ onMounted(() => {
         >{{ errors.name }}</small>
       </div>
 
-      <div>
+      <!-- Logo Upload Field -->
+      <div class="mb-4">
         <label
           for="logo"
-          class="text-lg"
-        >
-          Logo
-        </label>
+          class="text-lg font-semibold"
+        >Logo</label>
         <input
           id="logo"
-          class="w-full border p-2"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
           accept="image/jpg,image/png"
           type="file"
           @change="(event) => {
-            const iEvent = event as InputEvent
-            return onLogoInput(iEvent)
+            const iEvent = event as InputEvent;
+            return onLogoInput(iEvent);
           }"
         >
+        <small
+          v-if="errors.logo"
+          class="text-red-500 italic"
+        >{{ errors.logo }}</small>
       </div>
-      <small
-        v-if="errors.logo"
-        class="text-red-500 italic"
-      >
-        {{ errors.logo }}
-      </small>
 
-      <div>
+      <!-- Industry Selection -->
+      <div class="mb-4">
         <label
           for="industry"
-          class="text-lg"
-        >
-          Industry
-        </label>
+          class="text-lg font-semibold"
+        >Industry</label>
         <select
           id="industry"
           v-model="industry"
-          class="w-full"
-          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option
             v-for="(ind, index) in industries"
@@ -183,25 +182,24 @@ onMounted(() => {
         >{{ errors.industry }}</small>
       </div>
 
-      <div>
+      <!-- Company Size Selection -->
+      <div class="mb-4">
         <label
-          for="industry"
-          class="text-lg"
-        >
-          Company size
-        </label>
+          for="size"
+          class="text-lg font-semibold"
+        >Company Size</label>
         <select
-          id="industry"
+          id="size"
           v-model="size"
-          class="w-full"
-          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option
             v-for="(company_size, index) in companySizes"
             :key="index"
             :value="company_size.value"
           >
-            {{ company_size.label }}
+            {{
+              company_size.label }}
           </option>
         </select>
         <small
@@ -210,42 +208,40 @@ onMounted(() => {
         >{{ errors.size }}</small>
       </div>
 
-      <div>
+      <!-- Business Document Upload -->
+      <div class="mb-4">
         <label
           for="document"
-          class="text-lg"
-        >
-          Business document
-        </label>
+          class="text-lg font-semibold"
+        >Business Document</label>
         <input
-          id="logo"
-          class="w-full border p-2"
+          id="document"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
           accept="application/pdf"
           type="file"
           @change="(event) => {
-            const iEvent = event as InputEvent
-            return onDocumentInput(iEvent)
+            const iEvent = event as InputEvent;
+            return onDocumentInput(iEvent);
           }"
         >
+        <small
+          v-if="errors.document"
+          class="text-red-500 italic"
+        >{{ errors.document }}</small>
       </div>
-      <small
-        v-if="errors.document"
-        class="text-red-500 italic"
-      >
-        {{ errors.document }}
-      </small>
 
-      <div class="mt-2 flex gap-2 justify-center">
+      <!-- Navigation Buttons -->
+      <div class="mt-4 flex gap-4 justify-center">
         <button
           type="button"
-          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+          class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none disabled:bg-blue-500/60 disabled:cursor-not-allowed w-full"
           @click.prevent="onboardingStore.currentStep = 1"
         >
           Edit personal details
         </button>
 
         <button
-          class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed w-full"
+          class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 focus:outline-none disabled:bg-blue-500/60 disabled:cursor-not-allowed w-full"
           :disabled="Object.keys(errors).length > 0"
         >
           Verify details
