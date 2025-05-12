@@ -1,75 +1,62 @@
-# Nuxt Minimal Starter
+# Multi-step User Onboarding
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Technologies Used
 
-## Setup
+* Frontend: Nuxt 3 with Composition API
+* State Management: Pinia
+* Styles: Tailwind CSS
+* Package Manager: PNPM
 
-Make sure to install dependencies:
+## Prerequisites
 
-```bash
-# npm
-npm install
+Ensure you have the following installed:
 
-# pnpm
-pnpm install
+* Node.js (>= 16.x)
+* PNPM ([https://pnpm.io](https://pnpm.io))
+* Git
 
-# yarn
-yarn install
+## Setup Instructions
 
-# bun
-bun install
-```
+1. Clone this repository
 
-## Development Server
+   ```bash
+   git clone https://github.com/StanleyMasinde/multi-step-user-onboarding.git
+   ```
 
-Start the development server on `http://localhost:3000`:
+2. Change into the project directory
 
-```bash
-# npm
-npm run dev
+   ```bash
+   cd multi-step-user-onboarding
+   ```
 
-# pnpm
-pnpm dev
+3. Install all dependencies using PNPM
 
-# yarn
-yarn dev
+   ```bash
+   pnpm install
+   ```
 
-# bun
-bun run dev
-```
+4. Start the development server
 
-## Production
+   ```bash
+   pnpm dev
+   ```
 
-Build the application for production:
+## How to Test OTP
 
-```bash
-# npm
-npm run build
+* On the OTP phase, inputting **12345** will be successful. Any other input will fail. This is how failure is simulated.
+* API responses are mocked using **Nuxt's built-in server routes**. No actual backend is connected.
 
-# pnpm
-pnpm build
+## Usage
 
-# yarn
-yarn build
+* Access the application at `http://localhost:3000`
+* Follow the guided multi-step onboarding process
 
-# bun
-bun run build
-```
+## License
 
-Locally preview production build:
+This project is licensed under the MIT License.
 
-```bash
-# npm
-npm run preview
+## Acknowledgements
 
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+* Nuxt 3 for the frontend framework
+* Pinia for state management
+* Tailwind CSS for styling
