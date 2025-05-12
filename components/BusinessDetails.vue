@@ -3,19 +3,11 @@ import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 
+const props = defineProps<{
+  industries: string[]
+}>()
+
 const onboardingStore = useOnBoardingStore()
-const industries = [
-  'Technology',
-  'Healthcare',
-  'Finance',
-  'Education',
-  'Retail',
-  'Manufacturing',
-  'Energy',
-  'Hospitality',
-  'Entertainment',
-  'E-commerce',
-]
 
 const companySizes = [
   { label: 'Self-Employed', value: '1' },

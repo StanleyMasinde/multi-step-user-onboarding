@@ -6,6 +6,8 @@ const childLoading = ref<boolean>(false) // An excuse to use props and events
 const onVerificationSuccess = () => {
   router.push('/success')
 }
+
+const { data } = useAsyncData('industries', () => $fetch('/api/industries'))
 </script>
 
 <template>
@@ -38,7 +40,11 @@ const onVerificationSuccess = () => {
       <PersonalDetails v-show="onboardingStore.currentStep == 1" />
 
       <!-- Step 2 -->
-      <BusinessDetails v-show="onboardingStore.currentStep == 2" />
+      <BusinessDetails
+        v-if="data"
+        v-show="onboardingStore.currentStep == 2"
+        :industries="data"
+      />
 
       <!-- Verification -->
       <VerificationStep v-show="onboardingStore.currentStep == 3" />
