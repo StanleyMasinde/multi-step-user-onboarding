@@ -7,6 +7,7 @@
 * Styles: Tailwind CSS
 * Package Manager: PNPM
 * Code style: ESlint
+* Validation: VeeValidate and Zod
 
 ## Prerequisites
 
