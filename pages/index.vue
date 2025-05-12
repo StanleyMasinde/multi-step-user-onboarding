@@ -40,14 +40,24 @@ const { data } = useAsyncData('industries', () => $fetch('/api/industries'))
 
     <div v-else>
       <!-- Step 1 -->
-      <PersonalDetails v-show="onboardingStore.currentStep == 1" />
+      <ClientOnly
+        fallback-tag="span"
+        fallback="Loading personal details"
+      >
+        <PersonalDetails v-show="onboardingStore.currentStep == 1" />
+      </ClientOnly>
 
       <!-- Step 2 -->
-      <BusinessDetails
-        v-if="data"
-        v-show="onboardingStore.currentStep == 2"
-        :industries="data"
-      />
+      <ClientOnly
+        fallback-tag="span"
+        fallback="Loading business details"
+      >
+        <BusinessDetails
+          v-if="data"
+          v-show="onboardingStore.currentStep == 2"
+          :industries="data"
+        />
+      </ClientOnly>
 
       <!-- Verification -->
       <ClientOnly

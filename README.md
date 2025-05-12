@@ -13,7 +13,7 @@ This project is a multi-step user onboarding application built using Nuxt 3, lev
 
 ## State Management
 
-This application uses Pinia with persistent state enabled via local storage. The persistent state ensures that user data (including base64-encoded files) is maintained even after page reloads. Local storage is used because the state contains large base64-encoded files that cannot fit in cookies. To prevent SSR-related issues with file previews (which depend on the persisted state), the preview component is wrapped in `<client-only>` to ensure it renders only on the client side.
+This application uses Pinia with persistent state enabled via local storage. The persistent state ensures that user data (including base64-encoded files) is maintained even after page reloads. Local storage is used because the state contains large base64-encoded files that cannot fit in cookies. To prevent SSR-related issues with file previews (which depend on the persisted state), the steps components are wrapped in `<client-only>` to ensure it renders only on the client side.
 
 ## Validation
 
