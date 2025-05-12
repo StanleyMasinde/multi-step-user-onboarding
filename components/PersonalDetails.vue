@@ -155,7 +155,7 @@ const submitForm = handleSubmit(() => {
       <div class="mt-2">
         <button
           class="bg-blue-500 text-white p-2 disabled:bg-blue-500/60 cursor-pointer disabled:cursor-not-allowed"
-          :disabled="Object.keys(errors).length > 0 || onboardingStore.profilePicError != ''"
+          :disabled="Object.keys(errors).length > 0"
         >
           Proceed to business details
         </button>

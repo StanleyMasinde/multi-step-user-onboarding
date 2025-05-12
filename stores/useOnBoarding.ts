@@ -3,11 +3,9 @@ import { defineStore } from 'pinia'
 interface State {
   personalDetails: Partial<PersonalDetails>
   businessDetails: Partial<BusinessDetails>
-  currentStep: number
-  profilePicError: string
-  documentError: string
-  logoError: string
-
+  currentStep: 1 | 2 | 3
+  isLoading: boolean
+  verifyingCode: boolean
 }
 
 interface PersonalDetails {
@@ -33,9 +31,8 @@ export const useOnBoardingStore = defineStore('onboarding', {
       businessDetails: {
       },
       currentStep: 1,
-      profilePicError: '',
-      documentError: '',
-      logoError: '',
+      isLoading: false,
+      verifyingCode: false,
     }
   },
   actions: {

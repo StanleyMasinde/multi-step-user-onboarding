@@ -5,7 +5,6 @@ export default defineNuxtConfig({
 
   modules: ['@pinia/nuxt', '@nuxt/eslint'],
 
-  plugins: ['~/plugins/networkMock.client.ts'],
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   experimental: {
