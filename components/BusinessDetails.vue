@@ -94,6 +94,14 @@ const submitForm = handleSubmit(() => {
   onboardingStore.setBusinessDetails(name.value, industry.value, size.value)
   onboardingStore.currentStep = 3
 })
+
+onMounted(() => {
+  if (onboardingStore.businessDetails.name) name.value = onboardingStore.businessDetails.name
+  if (onboardingStore.businessDetails.logo_url) setLogo(onboardingStore.businessDetails.logo_url)
+  if (onboardingStore.businessDetails.business_document) setDocument(onboardingStore.businessDetails.business_document)
+  if (onboardingStore.businessDetails.industry) industry.value = onboardingStore.businessDetails.industry
+  if (onboardingStore.businessDetails.size) size.value = onboardingStore.businessDetails.size
+})
 </script>
 
 <template>

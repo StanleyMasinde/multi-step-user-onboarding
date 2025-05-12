@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { ClientOnly } from '#components'
+
 const onboardingStore = useOnBoardingStore()
 const router = useRouter()
 const childLoading = ref<boolean>(false) // An excuse to use props and events
 
 const onVerificationSuccess = () => {
+  onboardingStore.verifyingCode = false
   router.push('/success')
 }
 
@@ -47,7 +50,12 @@ const { data } = useAsyncData('industries', () => $fetch('/api/industries'))
       />
 
       <!-- Verification -->
-      <VerificationStep v-show="onboardingStore.currentStep == 3" />
+      <ClientOnly
+        fallback-tag="span"
+        fallback="Preparing preview"
+      >
+        <VerificationStep v-show="onboardingStore.currentStep == 3" />
+      </ClientOnly>
     </div>
   </div>
 </template>

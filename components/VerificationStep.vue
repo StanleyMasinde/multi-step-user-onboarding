@@ -39,6 +39,11 @@ const signUp = async () => {
     onboardingStore.isLoading = false
   }
 }
+
+onMounted(() => {
+  // Due to persistence, this component might render first.
+  // The code below is to esure the images are loaded correcty
+})
 </script>
 
 <template>

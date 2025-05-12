@@ -56,4 +56,7 @@ export const useOnBoardingStore = defineStore('onboarding', {
       this.businessDetails.size = size
     },
   },
+  persist: {
+    storage: piniaPluginPersistedstate.localStorage(),
+  },
 })

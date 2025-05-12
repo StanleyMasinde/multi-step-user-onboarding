@@ -57,6 +57,16 @@ const submitForm = handleSubmit(() => {
   onboardingStore.setPersonalDetails(name.value, email.value, phone_number.value)
   onboardingStore.currentStep = 2
 })
+
+onMounted(() => {
+  // Try and set values from the persisted state
+  onMounted(() => {
+    if (onboardingStore.personalDetails.name) name.value = onboardingStore.personalDetails.name
+    if (onboardingStore.personalDetails.email) email.value = onboardingStore.personalDetails.email
+    if (onboardingStore.personalDetails.phone_number) phone_number.value = onboardingStore.personalDetails.phone_number
+    if (onboardingStore.personalDetails.profile_image_url) photoValue.value = onboardingStore.personalDetails.profile_image_url
+  })
+})
 </script>
 
 <template>
