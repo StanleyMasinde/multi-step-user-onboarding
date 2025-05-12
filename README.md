@@ -6,6 +6,7 @@
 * State Management: Pinia
 * Styles: Tailwind CSS
 * Package Manager: PNPM
+* Code style: ESlint
 
 ## Prerequisites
 
